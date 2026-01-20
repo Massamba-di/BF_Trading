@@ -1,0 +1,9 @@
+### Docker / MySQL ###
+mysql/
+vendor/
+node_modules/
+
+### Symfony ###
+.env.local
+.env.prod.local
+var/

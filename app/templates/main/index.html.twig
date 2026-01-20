@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello MainController!{% endblock %}
+
+{% block body %}
+<header>
+
+</header>
+    <main>
+        <section>
+            <form>
+                <div class="row w-75 mx-auto">
+                    <input type="search" name="search"  id="inputsearch" placeholder="Rechercher un vehicule..." class="col-12 mb-2 col-md-9">
+                    <button type="button" id="btn" class="col-12 col-md-3 border-border  text-center mb-2 rounded-2 text-black bg-warning">Rechercher</button>
+                </div>
+            </form>
+
+
+        </section>
+        <section class="container">
+            <div class="row">
+            {% for vehicule in vehicules %}
+                <article  data-id="{{ vehicule.id }}"
+                          data-nom="{{ vehicule.nom }}"
+                          data-categorie="{{ vehicule.categories.name }}"
+                          data-marque="{{ vehicule.marque }}"
+                          data-prix="{{ vehicule.prixJour }}"
+                          data-image="{{ asset('uploads/vehicules/' ~ vehicule.images) }}"
+
+                >
+                    <img src="{{ asset('uploads/vehicules/' ~ vehicule.images) }}" alt="{{ vehicule.nom }}" class="align-middle rounded-3 w-100">
+                    <h1 class="text-center text-white  m-5 bg-black">{{ vehicule.nom }}</h1>
+                    <div >
+                        <span class="p-2 rounded-2 bg-success">{{ vehicule.categories.name }}</span>
+                      <span class="p-2 rounded-2 bg-primary">{{ vehicule.marque }}</span>
+
+
+                    </div>
+                    <a href="{{ path('app_vehicules_show', { id: vehicule.id }) }}"
+                       class="text-center border text-black bg-warning mb-2 rounded-2 text-decoration-none"
+                       >Voir Plus</a>
+
+
+                </article>
+            {% endfor %}
+            </div>
+        </section>
+
+    </main>
+    <footer>
+
+    </footer>
+{% endblock %}
