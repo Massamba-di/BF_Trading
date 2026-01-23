@@ -70,6 +70,9 @@ class Vehicules
     #[ORM\Column(length: 100)]
     private ?string $marque = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $description = null;
+
     public function getMarque(): ?string
     {
         return $this->marque;
@@ -169,6 +172,18 @@ class Vehicules
     public function setCategories(?Categories $categories): static
     {
         $this->categories = $categories;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
 
         return $this;
     }

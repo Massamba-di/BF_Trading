@@ -26,19 +26,21 @@
                           data-marque="{{ vehicule.marque }}"
                           data-prix="{{ vehicule.prixJour }}"
                           data-image="{{ asset('uploads/vehicules/' ~ vehicule.images) }}"
+                          class="col-12 col-md-6 col-lg-3   mb-5 rounded-3 border border-warning shadow p-3 "
 
                 >
                     <img src="{{ asset('uploads/vehicules/' ~ vehicule.images) }}" alt="{{ vehicule.nom }}" class="align-middle rounded-3 w-100">
                     <h1 class="text-center text-white  m-5 bg-black">{{ vehicule.nom }}</h1>
-                    <div >
-                        <span class="p-2 rounded-2 bg-success">{{ vehicule.categories.name }}</span>
-                      <span class="p-2 rounded-2 bg-primary">{{ vehicule.marque }}</span>
+                    <div class="mb-3">
+                        <span class="p-2 rounded-2 bg-success  ">{{ vehicule.categories.name }}</span>
+                      <span class="p-2 rounded-2 bg-primary ">{{ vehicule.marque }}</span>
 
 
                     </div>
                     <a href="{{ path('app_vehicules_show', { id: vehicule.id }) }}"
-                       class="text-center border text-black bg-warning mb-2 rounded-2 text-decoration-none"
-                       >Voir Plus</a>
+                       class="d-block  text-center border text-black bg-warning  rounded-2 text-decoration-none"
+                    >Voir Plus</a>
+
 
 
                 </article>

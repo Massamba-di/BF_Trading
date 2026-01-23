@@ -7,12 +7,41 @@
 
    </header>
     <main>
-        <div class="row">
-            <div class="col-12 col-md-6">
-            <article  class="col-12 col-md-6 col-lg-3 d-flex flex-column gap-3 position-relative mb-5 rounded-3 border border-warning shadow p-1">
-                <img src="{{ asset('uploads/vehicules/' ~ vehicule.images) }}" alt="{{ vehicule.nom }}" class="align-middle rounded-3 w-100">
+        <div class="row justify-content-center gap-3">
+
+            <article class="col-12 col-md-6 col-lg-3 position-relative mb-4 rounded-3 border border-warning shadow p-1">
+                <img src="{{ asset('uploads/vehicules/' ~ vehicule.images) }}"
+                     alt="{{ vehicule.nom }}"
+                     class="rounded-3 w-100">
             </article>
-        </div>
+
+            <div class="col-12 col-md-6 col-lg-5  mt-5">
+                <h1 class="fw-bold mb-2 fs-5">{{ vehicule.nom }}</h1>
+
+                <p class="text-muted mb-1 fs-5">
+                    Catégorie : <strong>{{ vehicule.categories.name }}</strong>
+                </p>
+
+                <p class="mb-1 fs-5">
+                    Marque : <strong>{{ vehicule.marque }}</strong>
+                </p>
+
+                <p class="fs-5 fw-semibold">
+                    Tarif journalier :
+                    <span class="text-success">{{ vehicule.prixJour }} CFA</span>
+                </p>
+                <p class="fs-5">{{ vehicule.description }}</p>
+
+                <p class="mt-2">
+                    Disponibilité :
+                    {% if vehicule.disponible %}
+                        <span class="badge bg-success fs-5">Disponible immédiatement</span>
+                    {% else %}
+                        <span class="badge bg-danger fs-5">Non disponible</span>
+                    {% endif %}
+                </p>
+            </div>
+
         </div>
 
     </main>

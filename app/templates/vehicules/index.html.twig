@@ -14,6 +14,7 @@
                 <th>PrixJour</th>
                 <th>Disponible</th>
                 <th>actions</th>
+                <th>descriptions</th>
             </tr>
         </thead>
         <tbody>
@@ -25,6 +26,8 @@
                 <td>{{ vehicule.prixJour }}</td>
                 <td>{{ vehicule.disponible }}</td>
                 <td>{{ vehicule.categories.name }}</td>
+                <td>{{ vehicule.description}}</td>
+
                 <td>{{ vehicule.images }}</td>
                 <td>
                     <a href="{{ path('app_vehicules_show', {'id': vehicule.id}) }}">show</a>

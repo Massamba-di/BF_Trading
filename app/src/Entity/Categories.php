@@ -24,6 +24,9 @@ class Categories
     #[ORM\OneToMany(targetEntity: Vehicules::class, mappedBy: 'categories')]
     private Collection $vehicules;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $description = null;
+
     public function __construct()
     {
         $this->vehicules = new ArrayCollection();
@@ -75,4 +78,6 @@ class Categories
 
         return $this;
     }
+
+
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Reservation;
 use App\Entity\Vehicules;
 use App\Form\VehiculesType;
 use App\Repository\VehiculesRepository;
@@ -60,8 +61,10 @@ final class VehiculesController extends AbstractController
     #[Route('/{id}', name: 'app_vehicules_show', methods: ['GET'])]
     public function show(Vehicules $vehicule): Response
     {
+    $reservation = new Reservation();
         return $this->render('vehicules/show.html.twig', [
             'vehicule' => $vehicule,
+            'reservation' => $vehicule,
         ]);
     }
 
