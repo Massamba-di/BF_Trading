@@ -3,37 +3,34 @@
 {% block title %}Reservation index{% endblock %}
 
 {% block body %}
-    <h1>Reservation index</h1>
+<div class="row text-center">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>DateDebut</th>
-                <th>DateFin</th>
-                <th>Total</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for reservation in reservations %}
-            <tr>
-                <td>{{ reservation.id }}</td>
-                <td>{{ reservation.dateDebut ? reservation.dateDebut|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ reservation.dateFin ? reservation.dateFin|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ reservation.total }}</td>
-                <td>
-                    <a href="{{ path('app_reservation_show', {'id': reservation.id}) }}">show</a>
-                    <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}">edit</a>
-                </td>
-            </tr>
+
+    <article class="col-12 col-md-6 col-lg-3 position-relative mb-4 rounded-3 border border-warning shadow p-1 text-center mx-auto">
+        <img src="{{ asset('uploads/vehicules/' ~ vehicule.images) }}"
+             alt="{{ vehicule.nom }}"
+             class="rounded-3 w-100">
+
+    </article>
+    <div>
+    {{ form_start(form, { attr: { class: 'border border-light shadow p-1 w-75 mx-auto' } }) }}
+    {{ form_row(form.dateDebut,{ attr: { class: 'form-control' } }) }}
+    {{ form_row(form.dateFin,{ attr: { class: 'form-control' } }) }}
+    {{ form_row(form.total,{ attr: { class: 'form-control' } }) }}
+        {% for adresse in adresses %}
+        {% if adresse is not empty %}
+            {{ adresse.adressNumber }} {{ adresse.street }}, {{ adresse.postal }} {{ adresse.city }}
         {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
+        <a href="{{ path('app_adresse_new') }}">Ajouter une nouvelle adresse</a>
+        {% endif %}
         {% endfor %}
-        </tbody>
-    </table>
+    {{ form_row(form.button,{ attr: { class: 'btn btn-warning text-black mt-2' } }) }}
 
-    <a href="{{ path('app_reservation_new') }}">Create new</a>
+
+    {{ form_end(form) }}
+
+    </div>
+</div>
+
+
 {% endblock %}

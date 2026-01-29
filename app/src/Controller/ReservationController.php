@@ -2,11 +2,16 @@
 
 namespace App\Controller;
 
+
+
+use App\Entity\Adresses;
 use App\Entity\Reservation;
+use App\Entity\Vehicules;
 use App\Form\ReservationType;
-use App\Repository\ReservationRepository;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -14,11 +19,44 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/reservation')]
 final class ReservationController extends AbstractController
 {
-    #[Route(name: 'app_reservation_index', methods: ['GET'])]
-    public function index(ReservationRepository $reservationRepository): Response
+    #[Route('/{id}', name: 'app_reservation_index')]
+    public function index(Request $request, Vehicules $vehicule, EntityManagerInterface $entityManager, Security $security): Response
     {
+        $user = $security->getUser();
+
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $adresses = $user->getAdresses();
+
+
+        $reservation = new Reservation();
+        $form = $this->createForm(ReservationType::class, $reservation);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $reservation->setVehicules($vehicule);
+
+            // Calculer le total automatiquement
+            $dateDebut = $reservation->getDateDebut();
+            $dateFin = $reservation->getDateFin();
+            $nbJours = $dateDebut->diff($dateFin)->days;
+            $total = $vehicule->getPrixJournalier() * $nbJours;
+            $reservation->setTotal($total);
+
+            $entityManager->persist($reservation);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Réservation effectuée avec succès !');
+            return $this->redirectToRoute('app_main');
+        }
+
         return $this->render('reservation/index.html.twig', [
-            'reservations' => $reservationRepository->findAll(),
+            'form' => $form,
+            'vehicule' => $vehicule,
+            'adresses' => $adresses,
+
         ]);
     }
 
@@ -26,6 +64,8 @@ final class ReservationController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $reservation = new Reservation();
+
+
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
 

@@ -25,6 +25,9 @@ class Reservation
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     private ?Vehicules $vehicules = null;
 
+    #[ORM\ManyToOne(inversedBy: 'reservation')]
+    private ?Adresses $adresses = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -74,6 +77,18 @@ class Reservation
     public function setVehicules(?Vehicules $vehicules): static
     {
         $this->vehicules = $vehicules;
+
+        return $this;
+    }
+
+    public function getAdresses(): ?Adresses
+    {
+        return $this->adresses;
+    }
+
+    public function setAdresses(?Adresses $adresses): static
+    {
+        $this->adresses = $adresses;
 
         return $this;
     }

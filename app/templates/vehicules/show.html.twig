@@ -40,9 +40,25 @@
                         <span class="badge bg-danger fs-5">Non disponible</span>
                     {% endif %}
                 </p>
+                {% if vehicule.disponible %}
+                    <div class="text-center">
+                        <a href="{{ path('app_reservation_index', { id: vehicule.id }) }}"
+                           class="btn btn-warning text-black p-1 fs-5 fw-bold">
+                            Réservation
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="text-center">
+        <span class="badge bg-warning text-black fs-5">
+            Réservation impossible
+        </span>
+                    </div>
+                {% endif %}
+
             </div>
 
         </div>
+
 
     </main>
     <footer>
