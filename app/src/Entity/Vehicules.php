@@ -8,8 +8,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-
-
 #[ORM\Entity(repositoryClass: VehiculesRepository::class)]
 class Vehicules
 {
@@ -17,16 +15,9 @@ class Vehicules
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     #[ORM\Column(length: 50)]
     private ?string $nom = null;
-
-
-
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 0)]
     private ?string $prixJour = null;
@@ -34,27 +25,33 @@ class Vehicules
     #[ORM\Column(length: 50)]
     private ?bool $disponible = null;
 
-    #[ORM\ManyToOne(inversedBy: 'vehicules')]
-    private ?Users $users = null;
-
-    /**
-     * @var Collection<int, Reservation>
-     */
-    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'vehicules')]
-    private Collection $reservations;
-
     #[ORM\Column(length: 255)]
     private ?string $images = null;
 
     #[ORM\ManyToOne(inversedBy: 'vehicules')]
     private ?Categories $categories = null;
 
+    #[ORM\Column(length: 100)]
+    private ?string $marque = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $description = null;
+
+    /**
+     * @var Collection<int, Reservation>
+     */
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'vehicule')]
+    private Collection $reservations;
+
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
     }
 
-
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
     public function getNom(): ?string
     {
@@ -64,14 +61,8 @@ class Vehicules
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
-
         return $this;
     }
-    #[ORM\Column(length: 100)]
-    private ?string $marque = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $description = null;
 
     public function getMarque(): ?string
     {
@@ -81,7 +72,6 @@ class Vehicules
     public function setMarque(string $marque): static
     {
         $this->marque = $marque;
-
         return $this;
     }
 
@@ -93,10 +83,8 @@ class Vehicules
     public function setPrixJour(string $prixJour): static
     {
         $this->prixJour = $prixJour;
-
         return $this;
     }
-
 
     public function getDisponible(): ?bool
     {
@@ -106,22 +94,43 @@ class Vehicules
     public function setDisponible(bool $disponible): static
     {
         $this->disponible = $disponible;
-
         return $this;
     }
 
-    public function getUsers(): ?Users
+    public function getImages(): ?string
     {
-        return $this->users;
+        return $this->images;
     }
 
-    public function setUsers(?Users $users): static
+    public function setImages(string $images): static
     {
-        $this->users = $users;
-
+        $this->images = $images;
         return $this;
     }
 
+    public function getCategories(): ?Categories
+    {
+        return $this->categories;
+    }
+
+    public function setCategories(?Categories $categories): static
+    {
+        $this->categories = $categories;
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    // ===== reservations =====
     /**
      * @return Collection<int, Reservation>
      */
@@ -134,57 +143,18 @@ class Vehicules
     {
         if (!$this->reservations->contains($reservation)) {
             $this->reservations->add($reservation);
-            $reservation->setVehicules($this);
+            $reservation->setVehicule($this);
         }
-
         return $this;
     }
 
     public function removeReservation(Reservation $reservation): static
     {
         if ($this->reservations->removeElement($reservation)) {
-            // set the owning side to null (unless already changed)
-            if ($reservation->getVehicules() === $this) {
-                $reservation->setVehicules(null);
+            if ($reservation->getVehicule() === $this) {
+                $reservation->setVehicule(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getImages(): ?string
-    {
-        return $this->images;
-    }
-
-    public function setImages(string $images): static
-    {
-        $this->images = $images;
-
-        return $this;
-    }
-
-    public function getCategories(): ?Categories
-    {
-        return $this->categories;
-    }
-
-    public function setCategories(?Categories $categories): static
-    {
-        $this->categories = $categories;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): static
-    {
-        $this->description = $description;
-
         return $this;
     }
 }

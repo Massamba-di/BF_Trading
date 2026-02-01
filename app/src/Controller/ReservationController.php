@@ -20,31 +20,36 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ReservationController extends AbstractController
 {
     #[Route('/{id}', name: 'app_reservation_index')]
+    #[IsGranted('ROLE_USER')]
     public function index(Request $request, Vehicules $vehicule, EntityManagerInterface $entityManager, Security $security): Response
     {
         $user = $security->getUser();
 
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        }
-
+        // Collection complète pour l'affichage dans le template
         $adresses = $user->getAdresses();
 
+        // Une seule adresse pour la logique de persist
+        $adresse = $adresses->first() ?: new Adresses();
 
         $reservation = new Reservation();
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $reservation->setVehicules($vehicule);
+            $reservation->setVehicule($vehicule);
+
+            $adresse->setUser($user);
+            $reservation->setAdresses($adresse);
+            $reservation->setUser($user);
 
             // Calculer le total automatiquement
             $dateDebut = $reservation->getDateDebut();
             $dateFin = $reservation->getDateFin();
             $nbJours = $dateDebut->diff($dateFin)->days;
-            $total = $vehicule->getPrixJournalier() * $nbJours;
+            $total = (float) $vehicule->getPrixJour() * $nbJours;
             $reservation->setTotal($total);
 
+            $entityManager->persist($adresse);
             $entityManager->persist($reservation);
             $entityManager->flush();
 
@@ -56,9 +61,9 @@ final class ReservationController extends AbstractController
             'form' => $form,
             'vehicule' => $vehicule,
             'adresses' => $adresses,
-
         ]);
     }
+
 
     #[Route('/new', name: 'app_reservation_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response

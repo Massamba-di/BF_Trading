@@ -14,16 +14,12 @@ class AdressesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('Adresses_Number')
+            ->add('adress_number')
             ->add('street')
-            ->add('city')
             ->add('postal')
+            ->add('city')
             ->add('country')
-            ->add('adresses_complement')
-            ->add('users', EntityType::class, [
-                'class' => Users::class,
-                'choice_label' => 'id',
-            ])
+
         ;
     }
 

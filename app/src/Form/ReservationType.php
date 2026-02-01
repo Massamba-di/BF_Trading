@@ -32,19 +32,14 @@ class ReservationType extends AbstractType
                 'disabled' => true, // Le total devrait être calculé automatiquement
                 'required' => false
             ])
-            ->add('adresses', EntityType::class, [
-                'class' => Adresses::class,
-                'choice_label' => 'rue', // ou le champ que vous voulez afficher
-                'label' => 'Adresse de livraison',
-                'placeholder' => 'Choisir une adresse',
 
-            ])
             ->add('button', SubmitType::class, [
                 'label' => 'Réserver'
             ]);
 
 
-        ;
+
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void

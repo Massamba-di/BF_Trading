@@ -6,13 +6,11 @@ use App\Repository\UsersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class Users implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -36,43 +34,27 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     /**
-     * @var Collection<int, Vehicules>
-     */
-    #[ORM\OneToMany(targetEntity: Vehicules::class, mappedBy: 'users')]
-    private Collection $reservations;
-
-    /**
-     * @var Collection<int, Vehicules>
-     */
-    #[ORM\OneToMany(targetEntity: Vehicules::class, mappedBy: 'users')]
-    private Collection $vehicules;
-
-    /**
      * @var Collection<int, Adresses>
      */
-    #[ORM\OneToMany(targetEntity: Adresses::class, mappedBy: 'users')]
+    #[ORM\OneToMany(targetEntity: Adresses::class, mappedBy: 'user')]
     private Collection $adresses;
 
-    #[ORM\Column]
-    private bool $isVerified = false;
-
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $lastname = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: true)]
     private ?string $firstname = null;
 
     /**
-     * @var Collection<int, Adresses>
+     * @var Collection<int, Reservation>
      */
-
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'user')]
+    private Collection $reservations;
 
     public function __construct()
     {
-        $this->reservations = new ArrayCollection();
-        $this->vehicules = new ArrayCollection();
         $this->adresses = new ArrayCollection();
-
+        $this->reservations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -151,66 +133,6 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Vehicules>
-     */
-    public function getReservations(): Collection
-    {
-        return $this->reservations;
-    }
-
-    public function addReservation(Vehicules $reservation): static
-    {
-        if (!$this->reservations->contains($reservation)) {
-            $this->reservations->add($reservation);
-            $reservation->setUsers($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReservation(Vehicules $reservation): static
-    {
-        if ($this->reservations->removeElement($reservation)) {
-            // set the owning side to null (unless already changed)
-            if ($reservation->getUsers() === $this) {
-                $reservation->setUsers(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Vehicules>
-     */
-    public function getVehicules(): Collection
-    {
-        return $this->vehicules;
-    }
-
-    public function addVehicule(Vehicules $vehicule): static
-    {
-        if (!$this->vehicules->contains($vehicule)) {
-            $this->vehicules->add($vehicule);
-            $vehicule->setUsers($this);
-        }
-
-        return $this;
-    }
-
-    public function removeVehicule(Vehicules $vehicule): static
-    {
-        if ($this->vehicules->removeElement($vehicule)) {
-            // set the owning side to null (unless already changed)
-            if ($vehicule->getUsers() === $this) {
-                $vehicule->setUsers(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, Adresses>
      */
     public function getAdresses(): Collection
@@ -222,7 +144,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->adresses->contains($adress)) {
             $this->adresses->add($adress);
-            $adress->setUsers($this);
+            $adress->setUser($this);
         }
 
         return $this;
@@ -232,22 +154,10 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->adresses->removeElement($adress)) {
             // set the owning side to null (unless already changed)
-            if ($adress->getUsers() === $this) {
-                $adress->setUsers(null);
+            if ($adress->getUser() === $this) {
+                $adress->setUser(null);
             }
         }
-
-        return $this;
-    }
-
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }
-
-    public function setIsVerified(bool $isVerified): static
-    {
-        $this->isVerified = $isVerified;
 
         return $this;
     }
@@ -257,7 +167,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->lastname;
     }
 
-    public function setLastname(string $lastname): static
+    public function setLastname(?string $lastname): static
     {
         $this->lastname = $lastname;
 
@@ -269,9 +179,39 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->firstname;
     }
 
-    public function setFirstname(string $firstname): static
+    public function setFirstname(?string $firstname): static
     {
         $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservation $reservation): static
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations->add($reservation);
+            $reservation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): static
+    {
+        if ($this->reservations->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getUser() === $this) {
+                $reservation->setUser(null);
+            }
+        }
 
         return $this;
     }

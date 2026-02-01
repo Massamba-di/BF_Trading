@@ -9,12 +9,11 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Adresses_Number</th>
+                <th>Adress_number</th>
                 <th>Street</th>
-                <th>City</th>
                 <th>Postal</th>
+                <th>City</th>
                 <th>Country</th>
-                <th>Adresses_complement</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -22,12 +21,11 @@
         {% for adress in adresses %}
             <tr>
                 <td>{{ adress.id }}</td>
-                <td>{{ adress.AdressesNumber }}</td>
+                <td>{{ adress.adressNumber }}</td>
                 <td>{{ adress.street }}</td>
-                <td>{{ adress.city }}</td>
                 <td>{{ adress.postal }}</td>
+                <td>{{ adress.city }}</td>
                 <td>{{ adress.country }}</td>
-                <td>{{ adress.adressesComplement }}</td>
                 <td>
                     <a href="{{ path('app_adresses_show', {'id': adress.id}) }}">show</a>
                     <a href="{{ path('app_adresses_edit', {'id': adress.id}) }}">edit</a>
@@ -35,7 +33,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="8">no records found</td>
+                <td colspan="7">no records found</td>
             </tr>
         {% endfor %}
         </tbody>

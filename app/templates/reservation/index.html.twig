@@ -17,14 +17,14 @@
     {{ form_row(form.dateDebut,{ attr: { class: 'form-control' } }) }}
     {{ form_row(form.dateFin,{ attr: { class: 'form-control' } }) }}
     {{ form_row(form.total,{ attr: { class: 'form-control' } }) }}
-        {% for adresse in adresses %}
-        {% if adresse is not empty %}
-            {{ adresse.adressNumber }} {{ adresse.street }}, {{ adresse.postal }} {{ adresse.city }}
+        {% if adresses is not empty %}
+            {% for adresse in adresses %}
+                <p>{{ adresse.adressNumber }} {{ adresse.street }}, {{ adresse.Postal }} {{ adresse.city }}</p>
+            {% endfor %}
         {% else %}
-        <a href="{{ path('app_adresse_new') }}">Ajouter une nouvelle adresse</a>
+            <a href="{{ path('app_adresses_new') }}">Ajouter une nouvelle adresse</a>
         {% endif %}
-        {% endfor %}
-    {{ form_row(form.button,{ attr: { class: 'btn btn-warning text-black mt-2' } }) }}
+        {{ form_row(form.button,{ attr: { class: 'btn btn-warning text-black mt-2' } }) }}
 
 
     {{ form_end(form) }}

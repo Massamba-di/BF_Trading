@@ -22,17 +22,23 @@ class Reservation
     #[ORM\Column]
     private ?float $total = null;
 
-    #[ORM\ManyToOne(inversedBy: 'reservations')]
-    private ?Vehicules $vehicules = null;
-
-    #[ORM\ManyToOne(inversedBy: 'reservation')]
+    #[ORM\ManyToOne(inversedBy: 'resevation')]
     private ?Adresses $adresses = null;
 
+    #[ORM\ManyToOne(inversedBy: 'reservations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Vehicules $vehicule = null;
+
+    #[ORM\ManyToOne(inversedBy: 'reservations')]
+    private ?Users $user = null;
+
+    // ===== getId =====
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    // ===== dateDebut =====
     public function getDateDebut(): ?\DateTime
     {
         return $this->dateDebut;
@@ -41,10 +47,10 @@ class Reservation
     public function setDateDebut(\DateTime $dateDebut): static
     {
         $this->dateDebut = $dateDebut;
-
         return $this;
     }
 
+    // ===== dateFin =====
     public function getDateFin(): ?\DateTime
     {
         return $this->dateFin;
@@ -53,10 +59,10 @@ class Reservation
     public function setDateFin(\DateTime $dateFin): static
     {
         $this->dateFin = $dateFin;
-
         return $this;
     }
 
+    // ===== total =====
     public function getTotal(): ?float
     {
         return $this->total;
@@ -65,22 +71,10 @@ class Reservation
     public function setTotal(float $total): static
     {
         $this->total = $total;
-
         return $this;
     }
 
-    public function getVehicules(): ?Vehicules
-    {
-        return $this->vehicules;
-    }
-
-    public function setVehicules(?Vehicules $vehicules): static
-    {
-        $this->vehicules = $vehicules;
-
-        return $this;
-    }
-
+    // ===== adresses =====
     public function getAdresses(): ?Adresses
     {
         return $this->adresses;
@@ -89,7 +83,30 @@ class Reservation
     public function setAdresses(?Adresses $adresses): static
     {
         $this->adresses = $adresses;
+        return $this;
+    }
 
+    // ===== vehicule =====
+    public function getVehicule(): ?Vehicules
+    {
+        return $this->vehicule;
+    }
+
+    public function setVehicule(?Vehicules $vehicule): static
+    {
+        $this->vehicule = $vehicule;
+        return $this;
+    }
+
+    // ===== user =====
+    public function getUser(): ?Users
+    {
+        return $this->user;
+    }
+
+    public function setUser(?Users $user): static
+    {
+        $this->user = $user;
         return $this;
     }
 }
