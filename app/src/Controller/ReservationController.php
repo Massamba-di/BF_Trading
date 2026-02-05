@@ -25,36 +25,47 @@ final class ReservationController extends AbstractController
     {
         $user = $security->getUser();
 
+        // Sécurité supplémentaire au cas où getUser() retourne null
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour faire une réservation.');
+            return $this->redirectToRoute('app_login');
+        }
+
         // Collection complète pour l'affichage dans le template
         $adresses = $user->getAdresses();
 
-        // Une seule adresse pour la logique de persist
-        $adresse = $adresses->first() ?: new Adresses();
+        // Une seule adresse pour la logique
+        $adresse = $adresses->first() ?: null;
+
+        // Vérifier que l'utilisateur a une adresse
+        if (!$adresse) {
+            $this->addFlash('error', 'Vous devez d\'abord enregistrer une adresse.');
+            return $this->redirectToRoute('app_adresses_new');
+        }
 
         $reservation = new Reservation();
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $reservation->setVehicule($vehicule);
-
-            $adresse->setUser($user);
-            $reservation->setAdresses($adresse);
-            $reservation->setUser($user);
-
             // Calculer le total automatiquement
             $dateDebut = $reservation->getDateDebut();
             $dateFin = $reservation->getDateFin();
             $nbJours = $dateDebut->diff($dateFin)->days;
             $total = (float) $vehicule->getPrixJour() * $nbJours;
-            $reservation->setTotal($total);
 
-            $entityManager->persist($adresse);
-            $entityManager->persist($reservation);
-            $entityManager->flush();
+            // Stocker les données de réservation en session au lieu de persister
+            $session = $request->getSession();
+            $session->set('reservation_data', [
+                'vehicule_id' => $vehicule->getId(),
+                'adresse_id' => $adresse->getId(),
+                'date_debut' => $dateDebut->format('Y-m-d H:i:s'),
+                'date_fin' => $dateFin->format('Y-m-d H:i:s'),
+                'total' => $total,
+            ]);
 
-            $this->addFlash('success', 'Réservation effectuée avec succès !');
-            return $this->redirectToRoute('app_main');
+            // Rediriger vers la page de paiement
+            return $this->redirectToRoute('app_payment');
         }
 
         return $this->render('reservation/index.html.twig', [
