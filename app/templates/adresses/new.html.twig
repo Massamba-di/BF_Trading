@@ -5,7 +5,17 @@
 {% block body %}
     <h1>Create new Adresses</h1>
 
-    {{ include('adresses/_form.html.twig') }}
 
-    <a href="{{ path('app_adresses_index') }}">back to list</a>
+
+    {{ form_start(form) }}
+    {{ form_row(form.adress_number, { attr: { class: 'form-control' } }) }}
+    {{ form_row(form.street, { attr: { class: 'form-control' } }) }}
+    {{ form_row(form.postal, { attr: { class: 'form-control' } }) }}
+    {{ form_row(form.city, { attr: { class: 'form-control' } }) }}
+    {{ form_row(form.country, { attr: { class: 'form-control' } }) }}
+
+    <button type="submit" class="btn btn-primary mt-2">Enregistrer</button>
+    {{ form_end(form) }}
+
+  
 {% endblock %}

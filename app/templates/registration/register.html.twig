@@ -7,17 +7,31 @@
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
 
-    <h1>Register</h1>
+    <h1 class="text-center">Inscription</h1>
 
-    {{ form_errors(registrationForm) }}
+<div class=" container text-center shadow p-3">
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+    {{ form_start(registrationForm, { attr: { class: 'bg-warning' } }) }}
+    {{ form_row(registrationForm.lastname, { attr: { class: 'form-control' } }) }}
+    {{ form_row(registrationForm.firstname, { attr: { class: 'form-control' } }) }}
+    {{ form_row(registrationForm.email, { attr: { class: 'form-control' } }) }}
+    {{ form_row(registrationForm.plainPassword, { attr: { class: 'form-control' } }) }}
 
-        <button type="submit" class="btn-primary">Register</button>
+    <div class="form-check d-flex align-items-center justify-content-center">
+        {{ form_widget(registrationForm.agreeTerms, { attr: { class: 'form-check-input text-center' } }) }}
+        {{ form_label(
+            registrationForm.agreeTerms,
+            "J'accepte la collecte de mes données personnelles",
+            { label_attr: { class: 'form-check-label' } }
+        ) }}
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3 mb-3">S’inscrire</button>
     {{ form_end(registrationForm) }}
+</div>
+
+
+
+
+
 {% endblock %}
